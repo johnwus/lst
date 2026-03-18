@@ -1,0 +1,186 @@
+.settingsShell {
+  min-height: 100vh;
+  background: radial-gradient(900px 520px at 20% 0%, rgba(255, 255, 255, 0.08) 0%, transparent 60%),
+    linear-gradient(170deg, #00110e 5%, #010819 100%);
+  color: #f6f7fb;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  display: flex;
+  flex-direction: column;
+}
+
+.settingsTopbar {
+  height: 60px;
+  display: flex;
+  align-items: center;
+  padding: 0 22px;
+  color: rgba(246, 247, 251, 0.88);
+  justify-content: space-between;
+}
+
+.settingsBackBtn {
+  border: none;
+  background: rgba(15, 23, 42, 0.8);
+  color: #e5e7eb;
+  border-radius: 999px;
+  padding: 6px 10px;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.settingsTopbarTitle {
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.settingsMain {
+  padding: 8px 22px 28px;
+  display: grid;
+  gap: 16px;
+  max-width: 940px;
+  margin: 0 auto;
+}
+
+.settingsBlock {
+  justify-self: center;
+  width: min(760px, 100%);
+}
+
+.blockTitle {
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 1px;
+  color: rgba(156, 168, 196, 0.95);
+  margin: 10px 6px 8px;
+}
+
+.settingsCard {
+  border-radius: 14px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(0, 0, 0, 0.18);
+  overflow: hidden;
+}
+
+.settingRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 14px 14px;
+}
+
+.settingRowLeft {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+}
+
+.settingIcon {
+  width: 34px;
+  height: 34px;
+  border-radius: 12px;
+  background: rgba(0, 0, 0, 0.22);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.10);
+  position: relative;
+}
+
+.settingIcon::after {
+  content: '';
+  position: absolute;
+  inset: 10px;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.18);
+}
+
+.settingIcon--bell::after {
+  background: rgba(82, 192, 255, 0.55);
+}
+.settingIcon--alert::after {
+  background: rgba(236, 72, 153, 0.50);
+}
+.settingIcon--sound::after {
+  background: rgba(34, 211, 238, 0.50);
+}
+.settingIcon--lock::after {
+  background: rgba(168, 85, 247, 0.50);
+}
+.settingIcon--shield::after {
+  background: rgba(34, 211, 238, 0.50);
+}
+
+.settingLabel {
+  font-size: 13px;
+  font-weight: 700;
+  color: rgba(246, 247, 251, 0.86);
+}
+
+.settingRight {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  color: rgba(246, 247, 251, 0.65);
+}
+
+.chev {
+  font-size: 22px;
+  line-height: 1;
+  opacity: 0.75;
+}
+
+.settingsDividerRow {
+  height: 1px;
+  background: rgba(255, 255, 255, 0.10);
+}
+
+.toggle {
+  width: 54px;
+  height: 30px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  background: rgba(0, 0, 0, 0.30);
+  padding: 3px;
+  cursor: pointer;
+  position: relative;
+}
+
+.toggleKnob {
+  display: block;
+  width: 24px;
+  height: 24px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.82);
+  transform: translateX(0);
+  transition: transform 0.15s ease, background 0.15s ease;
+}
+
+.toggleOn {
+  background: rgba(99, 102, 241, 0.55);
+}
+
+.toggleOn .toggleKnob {
+  transform: translateX(24px);
+  background: rgba(255, 255, 255, 0.92);
+}
+
+.toggle:focus-visible {
+  outline: 2px solid #6366f1;
+  outline-offset: 2px;
+}
+
+.settingRowBtn {
+  width: 100%;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.settingRowBtn:hover {
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.settingRowBtn:focus-visible {
+  outline: 2px solid #6366f1;
+  outline-offset: -2px;
+}
