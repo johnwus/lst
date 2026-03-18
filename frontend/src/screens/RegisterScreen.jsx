@@ -39,57 +39,81 @@ export default function RegisterScreen() {
 
     return (
         <AuthLayout
-            title="Register"
-            buttonLabel="Register"
+            title="Create your Let&apos;s Talk profile"
+            eyebrow="Create account"
+            mobileDescription="Set up your profile once, then move between live chat and mini threads with the same conversation tools on mobile and desktop."
+            buttonLabel="Create account"
             buttonType="submit"
             onSubmit={handleRegister}
             footer={
                 <>
                     Already have an account?{" "}
-                    <Link to="/login" className="text-accent-purple">
+                    <Link to="/login" className="font-semibold text-accent-teal">
                         Login
                     </Link>
                 </>
             }
         >
-                    <input
-                        name="fullName"
-                        value={formData.fullName}
-                        onChange={handleChange}
-                        placeholder="Full name"
-                        className="w-full mb-3 px-3 py-2 rounded-lg bg-midnight border border-midnight-border text-white outline-none"
-                    />
+            <label className="block">
+                <span className="mb-2 block text-sm font-medium text-white/72">
+                    Full name
+                </span>
+                <input
+                    name="fullName"
+                    value={formData.fullName}
+                    onChange={handleChange}
+                    placeholder="Christ Doe"
+                    className="w-full rounded-2xl border border-white/10 bg-[#0d2029]/90 px-4 py-3 text-white outline-none transition placeholder:text-white/30 focus:border-accent-teal"
+                />
+            </label>
 
-                    <input
-                        name="email"
-                        type="email"
-                        value={formData.email}
-                        onChange={handleChange}
-                        placeholder="Email"
-                        className="w-full mb-3 px-3 py-2 rounded-lg bg-midnight border border-midnight-border text-white outline-none"
-                    />
+            <label className="block">
+                <span className="mb-2 block text-sm font-medium text-white/72">
+                    Email
+                </span>
+                <input
+                    name="email"
+                    type="email"
+                    value={formData.email}
+                    onChange={handleChange}
+                    placeholder="christ@example.com"
+                    className="w-full rounded-2xl border border-white/10 bg-[#0d2029]/90 px-4 py-3 text-white outline-none transition placeholder:text-white/30 focus:border-accent-teal"
+                />
+            </label>
 
-                    <input
-                        name="password"
-                        type="password"
-                        value={formData.password}
-                        onChange={handleChange}
-                        placeholder="Password"
-                        className="w-full mb-3 px-3 py-2 rounded-lg bg-midnight border border-midnight-border text-white outline-none"
-                    />
+            <label className="block">
+                <span className="mb-2 block text-sm font-medium text-white/72">
+                    Password
+                </span>
+                <input
+                    name="password"
+                    type="password"
+                    value={formData.password}
+                    onChange={handleChange}
+                    placeholder="Create a password"
+                    className="w-full rounded-2xl border border-white/10 bg-[#0d2029]/90 px-4 py-3 text-white outline-none transition placeholder:text-white/30 focus:border-accent-purple"
+                />
+            </label>
 
-                    <input
-                        name="confirmPassword"
-                        type="password"
-                        value={formData.confirmPassword}
-                        onChange={handleChange}
-                        placeholder="Confirm password"
-                        className="w-full mb-4 px-3 py-2 rounded-lg bg-midnight border border-midnight-border text-white outline-none"
-                    />
+            <label className="block">
+                <span className="mb-2 block text-sm font-medium text-white/72">
+                    Confirm password
+                </span>
+                <input
+                    name="confirmPassword"
+                    type="password"
+                    value={formData.confirmPassword}
+                    onChange={handleChange}
+                    placeholder="Repeat your password"
+                    className="w-full rounded-2xl border border-white/10 bg-[#0d2029]/90 px-4 py-3 text-white outline-none transition placeholder:text-white/30 focus:border-accent-purple"
+                />
+            </label>
 
-                    {error ? (
-                        <p className="mb-4 text-sm text-accent-red">{error}</p>
-                    ) : null}
+            {error ? (
+                <p className="rounded-2xl border border-[#ff5d73]/30 bg-[#ff5d73]/10 px-4 py-3 text-sm text-[#ff98a7]">
+                    {error}
+                </p>
+            ) : null}
         </AuthLayout>
     );
 }
