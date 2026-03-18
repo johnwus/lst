@@ -1,10 +1,8 @@
 import { Routes, Route, Navigate } from "react-router-dom";
 import SplashScreen from "./screens/SplashScreen";
-import TokenCheckScreen from "./screens/TokenCheckScreen";
 import LoginScreen from "./screens/LoginScreen";
 import RegisterScreen from "./screens/RegisterScreen";
 import GlobalChatScreen from "./screens/GlobalChatScreen";
-import MiniThreadScreen from "./screens/MiniThreadScreen";
 
 function ProtectedRoute({ children }) {
   const token = localStorage.getItem("token");
@@ -15,7 +13,6 @@ export default function App() {
   return (
     <Routes>
       <Route path="/" element={<SplashScreen />} />
-      <Route path="/token-check" element={<TokenCheckScreen />} />
       <Route
         path="/login"
         element={<LoginScreen />}
@@ -29,14 +26,6 @@ export default function App() {
         element={
           <ProtectedRoute>
             <GlobalChatScreen />
-          </ProtectedRoute>
-        }
-      />
-      <Route
-        path="/thread"
-        element={
-          <ProtectedRoute>
-            <MiniThreadScreen />
           </ProtectedRoute>
         }
       />
