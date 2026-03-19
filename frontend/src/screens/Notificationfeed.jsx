@@ -1,5 +1,7 @@
 import { useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import MobileBottomNav from '../components/mobile/MobileBottomNav';
+import useIsMobileView from '../hooks/useIsMobileView';
 import './Notificationfeed.css';
 
 const TYPE_META = {
@@ -13,8 +15,8 @@ const initialNotifications = [
     id: 1,
     type: 'reply',
     title: 'New reply on your thread',
-    body: '“Thanks for starting this conversation!”',
-    topic: 'Community check‑in',
+    body: '"Thanks for starting this conversation!"',
+    topic: 'Community check-in',
     createdAt: new Date().toISOString(),
     read: false,
   },
@@ -95,6 +97,7 @@ function NotificationSection({ label, items, onItemClick }) {
 export function NotificationFeed() {
   const [notifications, setNotifications] = useState(initialNotifications);
   const navigate = useNavigate();
+  const isMobile = useIsMobileView();
 
   const { todayItems, yesterdayItems, todayDate, yesterdayDate } = useMemo(() => {
     const now = new Date();
@@ -142,12 +145,12 @@ export function NotificationFeed() {
   }
 
   return (
-    <div className="notifShell">
+    <div className="notifShell" style={{ paddingBottom: isMobile ? '80px' : '0' }}>
       <header className="notifTopbar">
         <button
           type="button"
           className="notifBackBtn"
-          onClick={() => navigate('/')}
+          onClick={() => navigate('/chat')}
         >
           ←
         </button>
@@ -178,6 +181,8 @@ export function NotificationFeed() {
           <div className="notifEmpty">no message</div>
         ) : null}
       </main>
+
+      {isMobile && <MobileBottomNav />}
     </div>
   );
 }
