@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import MessageList from "../components/chat/MessageList";
 import MessageInput from "../components/chat/MessageInput";
 import MiniThreadPanel from "../components/thread/MiniThreadPanel";
@@ -24,10 +25,10 @@ import moneyIcon from "../assets/money-wings-flying-symbol-cartoon-illustration-
 import useIsMobileView from "../hooks/useIsMobileView";
 
 const desktopNavItems = [
-    { label: "Live Room", active: true, icon: liveRoomIcon },
-    { label: "Explore", icon: searchImage },
-    { label: "Your Threads", icon: threadsIcon },
-    { label: "Notification", icon: notificationIcon, dot: true },
+    { label: "Live Room", active: true, icon: liveRoomIcon, to: "/chat" },
+    { label: "Explore", icon: searchImage, to: "/explore" },
+    { label: "Your Threads", icon: threadsIcon, to: "/threads/global" },
+    { label: "Notification", icon: notificationIcon, dot: true, to: "/notifications" },
 ];
 
 const categories = [
@@ -73,6 +74,7 @@ function ParticipantAvatar({ label }) {
 
 export default function GlobalChatScreen() {
     const isMobile = useIsMobileView();
+    const navigate = useNavigate();
     const [messages, setMessages] = useState([]);
     const [selectedThreadMessage, setSelectedThreadMessage] = useState(null);
     const [threadsByMessageId, setThreadsByMessageId] = useState({});
@@ -185,10 +187,7 @@ export default function GlobalChatScreen() {
 
     const visibleMessages = messages.filter((message) => {
         const normalizedSearch = searchTerm.trim().toLowerCase();
-        if (!normalizedSearch) {
-            return true;
-        }
-
+        if (!normalizedSearch) return true;
         const replyText = message.replyTo?.text || "";
         return [message.user, message.text, replyText]
             .filter(Boolean)
@@ -198,6 +197,8 @@ export default function GlobalChatScreen() {
     return (
         <div className="min-h-screen bg-[linear-gradient(180deg,#1b6478_0%,#0c5568_34%,#0a4e61_100%)] text-white">
             <div className={`mx-auto min-h-screen max-w-[1540px] px-0 ${isMobile ? "flex flex-col" : "lg:grid lg:grid-cols-[128px_minmax(0,1fr)_280px]"}`}>
+
+                {/* Desktop Sidebar */}
                 <aside className="hidden border-r border-white/10 bg-[#33353c]/96 lg:flex lg:min-h-screen lg:flex-col">
                     <div className="flex h-[88px] items-center justify-center border-b border-white/10">
                         <img
@@ -212,6 +213,7 @@ export default function GlobalChatScreen() {
                             <button
                                 key={item.label}
                                 type="button"
+                                onClick={() => item.to && navigate(item.to)}
                                 className="relative flex w-full flex-col items-center gap-2 rounded-2xl px-2 py-2 text-center text-[11px] text-white/86 transition hover:bg-white/6"
                             >
                                 {item.active ? <span className="absolute left-0 top-3 h-12 w-1 rounded-full bg-[#39ff74]" /> : null}
@@ -234,7 +236,6 @@ export default function GlobalChatScreen() {
                         <p className="mb-3 px-4 text-[11px] uppercase tracking-[0.12em] text-white/68">
                             Categories
                         </p>
-
                         <div className="space-y-1">
                             {categories.map((category) => (
                                 <button
@@ -251,12 +252,12 @@ export default function GlobalChatScreen() {
                                 </button>
                             ))}
                         </div>
-
                     </div>
 
                     <div className="mt-auto border-t border-white/10 px-3 py-4">
                         <button
                             type="button"
+                            onClick={() => navigate("/profile")}
                             className="flex w-full items-center gap-3 rounded-2xl px-2 py-2 text-left transition hover:bg-white/6"
                         >
                             <div className="flex h-12 w-12 items-center justify-center rounded-full bg-[linear-gradient(135deg,#08d6ff,#2968ff)] text-xl font-medium">
@@ -274,6 +275,7 @@ export default function GlobalChatScreen() {
                     </div>
                 </aside>
 
+                {/* Main content */}
                 <section className="flex min-h-screen min-w-0 flex-col">
                     <header className={`border-b border-white/10 bg-[#1f677c]/92 ${isMobile ? "px-4 py-4" : "px-4 py-4 sm:px-6 lg:px-8"}`}>
                         <div className="flex items-center justify-between gap-4">
@@ -286,7 +288,6 @@ export default function GlobalChatScreen() {
                                         live
                                     </span>
                                 </div>
-
                                 <h1 className={`${isMobile ? "text-[1.85rem] font-semibold tracking-tight" : "text-2xl font-semibold tracking-tight lg:hidden"}`}>
                                     Global Chat
                                 </h1>
@@ -300,7 +301,6 @@ export default function GlobalChatScreen() {
                                     <img src={shareImage} alt="" className="h-4 w-4 object-contain" />
                                     Share
                                 </button>
-
                                 <button
                                     type="button"
                                     className="hidden items-center gap-2 rounded-2xl bg-[#a7dc9d] px-4 py-2.5 text-sm font-medium text-white lg:flex"
@@ -308,7 +308,6 @@ export default function GlobalChatScreen() {
                                     <img src={searchImage} alt="" className="h-4 w-4 object-contain" />
                                     Share Discussion
                                 </button>
-
                                 <button
                                     type="button"
                                     className="rounded-full border border-white/15 bg-white/8 p-2 text-white/90 lg:hidden"
@@ -372,7 +371,6 @@ export default function GlobalChatScreen() {
                                             {filter}
                                         </button>
                                     ))}
-
                                     <label className="ml-auto flex max-w-[420px] flex-1 items-center gap-3 rounded-full bg-[#294954] px-5 py-2.5 text-white/68">
                                         <img src={searchImage} alt="" className="h-4 w-4 object-contain" />
                                         <input
@@ -403,7 +401,6 @@ export default function GlobalChatScreen() {
                                             ))}
                                         </div>
                                     </div>
-
                                     <label className="flex items-center gap-3 rounded-full border border-white/12 bg-[#5d7f8e]/25 px-4 py-2.5 text-white/68">
                                         <img src={searchImage} alt="" className="h-4 w-4 object-contain opacity-80" />
                                         <input
@@ -441,19 +438,18 @@ export default function GlobalChatScreen() {
                     </div>
                 </section>
 
+                {/* Right panel */}
                 <aside className="hidden min-h-screen border-l border-white/10 bg-[#34363d]/96 lg:flex lg:flex-col">
                     <div className="border-b border-white/10 px-5 py-5">
                         <p className="text-xl font-medium text-white">Active Participants</p>
                         <p className="mt-1 text-sm text-white/56">71 people in this room</p>
                     </div>
-
                     <div className="flex-1 overflow-y-auto px-4 py-4">
                         <div className="space-y-4">
                             {participants.map((name, index) => {
                                 const initials =
                                     String.fromCharCode(65 + (index % 26)) +
                                     String.fromCharCode(68 + (index % 20));
-
                                 return (
                                     <div
                                         key={`${name}-${index}`}
@@ -461,9 +457,7 @@ export default function GlobalChatScreen() {
                                     >
                                         <ParticipantAvatar label={initials} />
                                         <div className="min-w-0 flex-1">
-                                            <p className="truncate text-base leading-5 text-white">
-                                                {name}
-                                            </p>
+                                            <p className="truncate text-base leading-5 text-white">{name}</p>
                                             <p className="text-xs text-white/54">participant</p>
                                         </div>
                                         <button

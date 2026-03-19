@@ -5,11 +5,10 @@ import threadsIcon from "../../assets/threads.png";
 import notificationIcon from "../../assets/bell.png";
 
 const navItems = [
-    { label: "Live Room", icon: liveRoomIcon, to: "/chat" },
-    { label: "Explore", icon: searchIcon, disabled: true },
-    { label: "Your Threads", icon: threadsIcon, disabled: true },
-    { label: "Notification", icon: notificationIcon, disabled: true },
-    { label: "Profile", disabled: true },
+   { label: "Explore", icon: searchIcon, to: "/explore" },
+{ label: "Your Threads", icon: threadsIcon, to: "/threads/global" },
+{ label: "Notification", icon: notificationIcon, to: "/notifications", dot: true },
+{ label: "Profile", to: "/profile" },
 ];
 
 function ProfileOutlineIcon() {
