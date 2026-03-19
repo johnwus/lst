@@ -1,30 +1,8 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import MobileBottomNav from '../components/mobile/MobileBottomNav';
+import useIsMobileView from '../hooks/useIsMobileView';
 import './Settings.css';
-
-function SettingRow({ icon, label, right }) {
-  return (
-    <div className="settingRow">
-      <div className="settingRowLeft">
-        <span className={`settingIcon settingIcon--${icon}`} aria-hidden="true" />
-        <span className="settingLabel">{label}</span>
-      </div>
-      <div className="settingRight">{right}</div>
-    </div>
-  );
-}
-
-function SettingButtonRow({ icon, label, right, onClick }) {
-  return (
-    <button type="button" className="settingRow settingRowBtn" onClick={onClick}>
-      <div className="settingRowLeft">
-        <span className={`settingIcon settingIcon--${icon}`} aria-hidden="true" />
-        <span className="settingLabel">{label}</span>
-      </div>
-      <div className="settingRight">{right}</div>
-    </button>
-  );
-}
 
 function Toggle({ checked, onChange, ariaLabel }) {
   return (
@@ -41,18 +19,20 @@ function Toggle({ checked, onChange, ariaLabel }) {
 }
 
 export default function Settings() {
+  const navigate = useNavigate();
+  const isMobile = useIsMobileView();
   const [pushNotifications, setPushNotifications] = useState(true);
   const [realTimeAlerts, setRealTimeAlerts] = useState(false);
   const [soundEffects, setSoundEffects] = useState(true);
-  const navigate = useNavigate();
 
   return (
-    <div className="settingsShell">
+    <div className="settingsShell" style={{ paddingBottom: isMobile ? '80px' : '0' }}>
       <header className="settingsTopbar">
         <button
           type="button"
           className="settingsBackBtn"
-          onClick={() => navigate('/')}
+          onClick={() => navigate(-1)}
+          aria-label="Go back"
         >
           ←
         </button>
@@ -60,70 +40,78 @@ export default function Settings() {
       </header>
 
       <main className="settingsMain">
-        <section className="settingsBlock" aria-label="Preferences">
+        <section className="settingsBlock">
           <div className="blockTitle">PREFERENCES</div>
           <div className="settingsCard">
-            <SettingRow
-              icon="bell"
-              label="Push Notifications"
-              right={
-                <Toggle
-                  checked={pushNotifications}
-                  onChange={setPushNotifications}
-                  ariaLabel="Toggle push notifications"
-                />
-              }
-            />
+            <div className="settingRow">
+              <div className="settingRowLeft">
+                <span className="settingIcon settingIcon--bell" aria-hidden="true" />
+                <span className="settingLabel">Push Notifications</span>
+              </div>
+              <Toggle
+                checked={pushNotifications}
+                onChange={setPushNotifications}
+                ariaLabel="Toggle push notifications"
+              />
+            </div>
             <div className="settingsDividerRow" aria-hidden="true" />
-            <SettingRow
-              icon="alert"
-              label="Real-time Alerts"
-              right={
-                <Toggle
-                  checked={realTimeAlerts}
-                  onChange={setRealTimeAlerts}
-                  ariaLabel="Toggle real-time alerts"
-                />
-              }
-            />
+            <div className="settingRow">
+              <div className="settingRowLeft">
+                <span className="settingIcon settingIcon--bell" aria-hidden="true" />
+                <span className="settingLabel">Real-time Alerts</span>
+              </div>
+              <Toggle
+                checked={realTimeAlerts}
+                onChange={setRealTimeAlerts}
+                ariaLabel="Toggle real-time alerts"
+              />
+            </div>
             <div className="settingsDividerRow" aria-hidden="true" />
-            <SettingRow
-              icon="sound"
-              label="Sound Effects"
-              right={
-                <Toggle
-                  checked={soundEffects}
-                  onChange={setSoundEffects}
-                  ariaLabel="Toggle sound effects"
-                />
-              }
-            />
+            <div className="settingRow">
+              <div className="settingRowLeft">
+                <span className="settingIcon settingIcon--bell" aria-hidden="true" />
+                <span className="settingLabel">Sound Effects</span>
+              </div>
+              <Toggle
+                checked={soundEffects}
+                onChange={setSoundEffects}
+                ariaLabel="Toggle sound effects"
+              />
+            </div>
           </div>
         </section>
 
-        <section className="settingsBlock" aria-label="Account Management">
+        <section className="settingsBlock">
           <div className="blockTitle">ACCOUNT MANAGEMENT</div>
           <div className="settingsCard">
-            <SettingButtonRow
-              icon="lock"
-              label="Change Password"
-              right={<span className="chev" aria-hidden="true">›</span>}
-              onClick={() => {
-                // Placeholder for change password
-              }}
-            />
+            <button
+              type="button"
+              className="settingRow settingRowBtn"
+              onClick={() => {}}
+            >
+              <div className="settingRowLeft">
+                <span className="settingIcon settingIcon--shield" aria-hidden="true" />
+                <span className="settingLabel">Change Password</span>
+              </div>
+              <span className="chev" aria-hidden="true">›</span>
+            </button>
             <div className="settingsDividerRow" aria-hidden="true" />
-            <SettingButtonRow
-              icon="shield"
-              label="Data Privacy"
-              right={<span className="chev" aria-hidden="true">›</span>}
-              onClick={() => {
-                // Placeholder for data privacy
-              }}
-            />
+            <button
+              type="button"
+              className="settingRow settingRowBtn"
+              onClick={() => {}}
+            >
+              <div className="settingRowLeft">
+                <span className="settingIcon settingIcon--shield" aria-hidden="true" />
+                <span className="settingLabel">Data Privacy</span>
+              </div>
+              <span className="chev" aria-hidden="true">›</span>
+            </button>
           </div>
         </section>
       </main>
+
+      {isMobile && <MobileBottomNav />}
     </div>
   );
 }
