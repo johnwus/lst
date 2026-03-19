@@ -36,6 +36,9 @@ coverage/
 *.seed
 *.pid.lock
 
+# Claude Code
+.claude/
+
 # Team documentation (excluded from git)
 team/
 TEAM_TASKS.md

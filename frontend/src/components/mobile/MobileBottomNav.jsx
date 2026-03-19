@@ -6,7 +6,7 @@ import notificationIcon from "../../assets/bell.png";
 
 const navItems = [
     { label: "Live Room", icon: liveRoomIcon, to: "/chat" },
-    { label: "Explore", icon: searchIcon, disabled: true },
+    { label: "Explore", icon: searchIcon, to: "/explore" },
     { label: "Your Threads", icon: threadsIcon, disabled: true },
     { label: "Notification", icon: notificationIcon, disabled: true },
     { label: "Profile", disabled: true },
@@ -91,6 +91,8 @@ export default function MobileBottomNav() {
     const normalizedPath =
         location.pathname === "/chat"
             ? "Live Room"
+            : location.pathname === "/explore"
+            ? "Explore"
             : "";
 
     return (

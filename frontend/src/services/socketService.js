@@ -19,3 +19,9 @@ export function disconnectSocket() {
         socket = null;
     }
 }
+
+export function emitNewMessage(message) {
+    if (socket) {
+        socket.emit("new_message", message);
+    }
+}
