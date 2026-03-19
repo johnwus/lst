@@ -1,5 +1,7 @@
 import { useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import MobileBottomNav from '../components/mobile/MobileBottomNav';
+import useIsMobileView from '../hooks/useIsMobileView';
 import './Profile.css';
 
 const DEFAULT_AVATAR_DATA_URL =
@@ -99,6 +101,7 @@ export default function Profile() {
   const draftObjectUrlRef = useRef(null);
   const fileInputRef = useRef(null);
   const navigate = useNavigate();
+  const isMobile = useIsMobileView();
 
   function openFilePicker() {
     fileInputRef.current?.click();
@@ -135,9 +138,6 @@ export default function Profile() {
     setNewTopicContext('');
     setNewTopicMedia('none');
     setNewTopicCategory('Society');
-    setShowTopicModal(false);
-
-    // Send to the "live" view by refreshing the explore list (no dedicated live page).
     setShowTopicModal(false);
   }
 
@@ -194,100 +194,118 @@ export default function Profile() {
 
     setUsername(cleaned);
     setAvatarUrl(draftAvatarUrl);
-
-    // If the draft avatar URL was a blob URL, it's now the saved one.
     draftObjectUrlRef.current = null;
-
     setIsEditing(false);
   }
 
   return (
     <div className="profileShell">
-      <aside className="profileSidebar" aria-label="Primary navigation">
-        <div className="profileSbTop">
-          <div className="profileSbBrand" aria-hidden="true" />
-        </div>
 
-        <nav className="profileSbNav">
-          <SidebarItem icon="live" label="Live Room" />
-          <SidebarItem icon="explore" label="Explore" />
-          <SidebarItem icon="threads" label="Your Threads" />
-          <SidebarItem
-            icon="notif"
-            label="Notification"
-            onClick={() => navigate('/notifications')}
-          />
-        </nav>
-
-        <div className="profileSbSection">
-          <div className="profileSbSectionTitle">CATEGORIES</div>
-          <div className="profileSbCats">
-            <button type="button" className="profileCat">
-              <span className="profileCatDot profileCatDot--society" aria-hidden="true" />
-              Society
-            </button>
-            <button type="button" className="profileCat">
-              <span className="profileCatDot profileCatDot--tech" aria-hidden="true" />
-              Tech
-            </button>
-            <button type="button" className="profileCat">
-              <span className="profileCatDot profileCatDot--culture" aria-hidden="true" />
-              Culture
-            </button>
-            <button type="button" className="profileCat">
-              <span className="profileCatDot profileCatDot--money" aria-hidden="true" />
-              Money
-            </button>
+      {/* Desktop sidebar — hidden on mobile */}
+      {!isMobile && (
+        <aside className="profileSidebar" aria-label="Primary navigation">
+          <div className="profileSbTop">
+            <div className="profileSbBrand" aria-hidden="true" />
           </div>
-        </div>
 
-        <div className="profileSbBottom">
-          <button
-            type="button"
-            className="profileMe"
-            onClick={() => navigate('/settings')}
-            aria-label="Go to settings"
-          >
-            <div className="profileMeAvatar" aria-hidden="true">
-              Y
+          <nav className="profileSbNav">
+            <SidebarItem icon="live" label="Live Room" onClick={() => navigate('/chat')} />
+            <SidebarItem icon="explore" label="Explore" onClick={() => navigate('/explore')} />
+            <SidebarItem icon="threads" label="Your Threads" onClick={() => navigate('/threads/global')} />
+            <SidebarItem icon="notif" label="Notification" onClick={() => navigate('/notifications')} />
+          </nav>
+
+          <div className="profileSbSection">
+            <div className="profileSbSectionTitle">CATEGORIES</div>
+            <div className="profileSbCats">
+              <button type="button" className="profileCat">
+                <span className="profileCatDot profileCatDot--society" aria-hidden="true" />
+                Society
+              </button>
+              <button type="button" className="profileCat">
+                <span className="profileCatDot profileCatDot--tech" aria-hidden="true" />
+                Tech
+              </button>
+              <button type="button" className="profileCat">
+                <span className="profileCatDot profileCatDot--culture" aria-hidden="true" />
+                Culture
+              </button>
+              <button type="button" className="profileCat">
+                <span className="profileCatDot profileCatDot--money" aria-hidden="true" />
+                Money
+              </button>
             </div>
-            <div className="profileMeText">
-              <div className="profileMeTitle">
-                YOU
-                <span className="profileMeIcon" aria-hidden="true">⚙</span>
+          </div>
+
+          <div className="profileSbBottom">
+            <button
+              type="button"
+              className="profileMe"
+              onClick={() => navigate('/settings')}
+              aria-label="Go to settings"
+            >
+              <div className="profileMeAvatar" aria-hidden="true">Y</div>
+              <div className="profileMeText">
+                <div className="profileMeTitle">
+                  YOU
+                  <span className="profileMeIcon" aria-hidden="true">⚙</span>
+                </div>
+                <div className="profileMeHandle">@{username}</div>
               </div>
-              <div className="profileMeHandle">@{username}</div>
-            </div>
-          </button>
-        </div>
-      </aside>
-
-      <main className="profileMain">
-        <header className="profileTopbar">
-          <div className="profileTopbarTitle">
-            <span className="profileTopbarIcon" aria-hidden="true" />
-            Your Profile
+            </button>
           </div>
-          {isEditing ? (
-            <div className="profileEditActions">
-              <button
-                type="button"
-                className="profileEditBtn profileEditBtnGhost"
-                onClick={cancelEditing}
-              >
-                Cancel
-              </button>
-              <button
-                type="button"
-                className="profileEditBtn"
-                onClick={saveEditing}
-                disabled={!isDirty}
-              >
-                Save
-              </button>
+        </aside>
+      )}
+
+      {/* Main content */}
+      <main className="profileMain" style={{ paddingBottom: isMobile ? '80px' : '0' }}>
+
+        {/* Mobile topbar with back button */}
+        {isMobile && (
+          <header style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: '12px',
+            padding: '16px',
+            borderBottom: '1px solid rgba(255,255,255,0.08)',
+          }}>
+            <button
+              type="button"
+              onClick={() => navigate('/chat')}
+              style={{
+                background: 'none',
+                border: 'none',
+                color: 'white',
+                fontSize: '20px',
+                cursor: 'pointer',
+                padding: '4px',
+              }}
+              aria-label="Go back"
+            >
+              ←
+            </button>
+            <span style={{ fontWeight: 600, fontSize: '16px' }}>Your Profile</span>
+          </header>
+        )}
+
+        {!isMobile && (
+          <header className="profileTopbar">
+            <div className="profileTopbarTitle">
+              <span className="profileTopbarIcon" aria-hidden="true" />
+              Your Profile
             </div>
-          ) : null}
-        </header>
+            {isEditing ? (
+              <div className="profileEditActions">
+                <button type="button" className="profileEditBtn profileEditBtnGhost" onClick={cancelEditing}>
+                  Cancel
+                </button>
+                <button type="button" className="profileEditBtn" onClick={saveEditing} disabled={!isDirty}>
+                  Save
+                </button>
+              </div>
+            ) : null}
+          </header>
+        )}
 
         <div className="profileContent">
           <section className="profileHeroCard" aria-label="Profile summary">
@@ -304,7 +322,6 @@ export default function Profile() {
                   className="avatarEditBtn"
                   onClick={openFilePicker}
                   aria-label="Change profile picture"
-                  title="Change profile picture"
                 >
                   ✎
                 </button>
@@ -331,9 +348,8 @@ export default function Profile() {
             ) : (
               <div className="profileHeroHandle">@{username}</div>
             )}
-            <div className="profileHeroTagline">
-              joining conversations, one topic at a time
-            </div>
+
+            <div className="profileHeroTagline">joining conversations, one topic at a time</div>
 
             <div className="statsBar statsBarHero" role="group" aria-label="Profile stats">
               <Stat label="Followers" value={0} />
@@ -383,14 +399,8 @@ export default function Profile() {
                 onClick={() => {
                   if (isEditing) {
                     if (isDirty) {
-                      const saveNow = window.confirm(
-                        'You have unsaved changes. Save them now?'
-                      );
-                      if (saveNow) {
-                        saveEditing();
-                      } else {
-                        cancelEditing();
-                      }
+                      const saveNow = window.confirm('You have unsaved changes. Save them now?');
+                      if (saveNow) { saveEditing(); } else { cancelEditing(); }
                       return;
                     }
                     setIsEditing(false);
@@ -404,36 +414,27 @@ export default function Profile() {
                 icon="shield"
                 label="Privacy & Security"
                 right={<span className="chev" aria-hidden="true">›</span>}
-                onClick={() => {
-                  // Clickable placeholder (no action)
-                }}
+                onClick={() => {}}
               />
               <div className="settingsDividerRow" aria-hidden="true" />
               <SettingButtonRow
                 icon="help"
                 label="Help & Support"
                 right={<span className="chev" aria-hidden="true">›</span>}
-                onClick={() => {
-                  // Clickable placeholder (no action)
-                }}
+                onClick={() => {}}
               />
             </div>
           </section>
 
-          {/* Small sign-out text button at the bottom-right */}
-          <div
-            style={{
-              marginTop: '16px',
-              display: 'flex',
-              justifyContent: 'flex-end',
-            }}
-          >
+          <div style={{ marginTop: '16px', display: 'flex', justifyContent: 'flex-end' }}>
             <button
               type="button"
               onClick={() => {
                 const confirmed = window.confirm('Are you sure you want to sign out?');
                 if (confirmed) {
-                  window.close();
+                  localStorage.removeItem('token');
+                  localStorage.removeItem('user');
+                  navigate('/login');
                 }
               }}
               style={{
@@ -456,39 +457,24 @@ export default function Profile() {
               <div className="modalCard">
                 <div className="modalHeader">
                   <div className="modalTitle">New Explore Topic</div>
-                  <button
-                    type="button"
-                    className="modalClose"
-                    aria-label="Close"
-                    onClick={closeNewTopicModal}
-                  >
-                    ×
-                  </button>
+                  <button type="button" className="modalClose" aria-label="Close" onClick={closeNewTopicModal}>×</button>
                 </div>
-
                 <div className="modalBody">
                   <div className="modalSection">
                     <div className="modalSectionTitle">Category</div>
                     <div className="modalOptions">
-                      {['Society', 'Tech', 'Lifestyle', 'Education', 'Entertainment', 'Culture'].map(
-                        (cat) => (
-                          <button
-                            key={cat}
-                            type="button"
-                            className={
-                              newTopicCategory === cat
-                                ? 'modalOption modalOptionActive'
-                                : 'modalOption'
-                            }
-                            onClick={() => setNewTopicCategory(cat)}
-                          >
-                            {cat}
-                          </button>
-                        )
-                      )}
+                      {['Society', 'Tech', 'Lifestyle', 'Education', 'Entertainment', 'Culture'].map((cat) => (
+                        <button
+                          key={cat}
+                          type="button"
+                          className={newTopicCategory === cat ? 'modalOption modalOptionActive' : 'modalOption'}
+                          onClick={() => setNewTopicCategory(cat)}
+                        >
+                          {cat}
+                        </button>
+                      ))}
                     </div>
                   </div>
-
                   <div className="modalSection">
                     <label className="modalLabel">Topic Question/Title</label>
                     <input
@@ -498,7 +484,6 @@ export default function Profile() {
                       placeholder="e.g. What's your favorite way to..."
                     />
                   </div>
-
                   <div className="modalSection">
                     <label className="modalLabel">Context</label>
                     <textarea
@@ -509,7 +494,6 @@ export default function Profile() {
                       rows={3}
                     />
                   </div>
-
                   <div className="modalSection">
                     <div className="modalSectionTitle">Media</div>
                     <div className="modalOptions">
@@ -517,11 +501,7 @@ export default function Profile() {
                         <button
                           key={option}
                           type="button"
-                          className={
-                            newTopicMedia === option
-                              ? 'modalOption modalOptionActive'
-                              : 'modalOption'
-                          }
+                          className={newTopicMedia === option ? 'modalOption modalOptionActive' : 'modalOption'}
                           onClick={() => setNewTopicMedia(option)}
                         >
                           {option}
@@ -529,22 +509,9 @@ export default function Profile() {
                       ))}
                     </div>
                   </div>
-
                   <div className="modalActions">
-                    <button
-                      type="button"
-                      className="modalBtn modalBtnGhost"
-                      onClick={closeNewTopicModal}
-                    >
-                      Cancel
-                    </button>
-                    <button
-                      type="button"
-                      className="modalBtn modalBtnPrimary"
-                      onClick={publishNewTopic}
-                    >
-                      Publish to explore
-                    </button>
+                    <button type="button" className="modalBtn modalBtnGhost" onClick={closeNewTopicModal}>Cancel</button>
+                    <button type="button" className="modalBtn modalBtnPrimary" onClick={publishNewTopic}>Publish to explore</button>
                   </div>
                 </div>
               </div>
@@ -552,6 +519,10 @@ export default function Profile() {
           ) : null}
         </div>
       </main>
+
+      {/* Mobile bottom nav */}
+      {isMobile && <MobileBottomNav />}
+
     </div>
   );
 }
