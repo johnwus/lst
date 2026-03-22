@@ -1,0 +1,31 @@
+kind = "web"
+previewPath = "/"
+title = "Let's Talk"
+version = "1.0.0"
+id = "artifacts/lets-talk"
+router = "path"
+
+[[integratedSkills]]
+name = "react-vite"
+version = "1.0.0"
+
+[[services]]
+localPort = 20606
+name = "web"
+paths = ["/"]
+
+[services.development]
+run = "pnpm --filter @workspace/lets-talk run dev"
+
+[services.env]
+PORT = "20606"
+BASE_PATH = "/"
+
+[services.production]
+build = ["pnpm", "--filter", "@workspace/lets-talk", "run", "build"]
+publicDir = "artifacts/lets-talk/dist/public"
+serve = "static"
+
+[[services.production.rewrites]]
+from = "/*"
+to = "/index.html"

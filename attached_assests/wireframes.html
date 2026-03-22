@@ -1,0 +1,655 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Let's Talk – Wireframes & Screen Transitions</title>
+<style>
+  /* ── TOKENS ───────────────────────────────── */
+  :root{
+    --bg:#0d1f26;
+    --surface:#152833;
+    --surface2:#1c3340;
+    --border:#26475a;
+    --accent:#e63946;
+    --purple:#7c4dff;
+    --teal:#4ecdc4;
+    --text:#e8f4f8;
+    --text2:#8fb0c0;
+    --green:#4caf50;
+    --radius:14px;
+    --transition:380ms cubic-bezier(.4,0,.2,1);
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{
+    background:#071218;
+    min-height:100vh;
+    font-family:'Segoe UI',system-ui,sans-serif;
+    color:var(--text);
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    overflow-x:hidden;
+  }
+
+  /* ── HEADER ───────────────────────────────── */
+  header{
+    width:100%;max-width:1200px;
+    display:flex;align-items:center;justify-content:space-between;
+    padding:18px 28px;
+    border-bottom:1px solid var(--border);
+  }
+  .logo{display:flex;align-items:center;gap:10px;font-weight:700;font-size:1.1rem}
+  .logo-badge{
+    background:var(--accent);color:#fff;
+    border-radius:10px;padding:4px 8px;font-size:.7rem;font-weight:700;
+  }
+  .flow-nav{display:flex;gap:8px;flex-wrap:wrap}
+  .flow-btn{
+    padding:6px 14px;border-radius:20px;border:1px solid var(--border);
+    background:var(--surface);color:var(--text2);cursor:pointer;font-size:.78rem;
+    transition:all .2s;
+  }
+  .flow-btn:hover,.flow-btn.active{background:var(--purple);color:#fff;border-color:var(--purple)}
+
+  /* ── STAGE ────────────────────────────────── */
+  .stage{
+    display:flex;align-items:flex-start;justify-content:center;
+    gap:48px;padding:32px 24px;width:100%;max-width:1200px;flex-wrap:wrap;
+  }
+
+  /* ── PHONE FRAME ──────────────────────────── */
+  .phone-wrap{
+    display:flex;flex-direction:column;align-items:center;gap:12px;
+  }
+  .phone-label{
+    font-size:.8rem;color:var(--text2);text-transform:uppercase;letter-spacing:.08em;
+  }
+  .phone{
+    width:300px;height:620px;
+    background:var(--surface);
+    border-radius:44px;
+    border:2px solid var(--border);
+    overflow:hidden;
+    position:relative;
+    box-shadow:0 24px 60px #0006,inset 0 0 0 1px #ffffff08;
+  }
+  .phone::before{
+    content:'';position:absolute;top:14px;left:50%;transform:translateX(-50%);
+    width:80px;height:8px;background:#0d1f26;border-radius:6px;z-index:99;
+  }
+
+  /* ── SCREEN (inside phone) ─────────────────── */
+  .screen{
+    position:absolute;inset:0;
+    display:flex;flex-direction:column;
+    overflow:hidden;
+    opacity:0;pointer-events:none;
+    transition:opacity var(--transition),transform var(--transition);
+    transform:translateX(40px);
+  }
+  .screen.active{
+    opacity:1;pointer-events:all;transform:translateX(0);
+  }
+  .screen.exit-left{opacity:0;transform:translateX(-40px)}
+
+  /* ── BOTTOM NAV ────────────────────────────── */
+  .bnav{
+    position:absolute;bottom:0;left:0;right:0;
+    background:var(--bg);
+    border-top:1px solid var(--border);
+    display:flex;justify-content:space-around;align-items:center;
+    padding:10px 0 14px;z-index:50;
+  }
+  .bnav-item{
+    display:flex;flex-direction:column;align-items:center;gap:3px;
+    font-size:.58rem;color:var(--text2);cursor:pointer;transition:color .2s;
+    background:none;border:none;
+  }
+  .bnav-item svg{width:20px;height:20px;stroke:currentColor;fill:none;stroke-width:1.8}
+  .bnav-item.active{color:var(--purple)}
+
+  /* ── TOP NAV ───────────────────────────────── */
+  .topbar{
+    padding:44px 16px 10px;
+    display:flex;align-items:center;justify-content:space-between;
+    background:var(--bg);
+    flex-shrink:0;
+  }
+  .topbar-title{font-size:.95rem;font-weight:600}
+  .topbar-logo{display:flex;align-items:center;gap:6px}
+  .t-badge{
+    background:var(--accent);color:#fff;
+    border-radius:8px;padding:2px 6px;font-size:.6rem;font-weight:700;
+  }
+  .more-btn{font-size:1.2rem;color:var(--text2);background:none;border:none;cursor:pointer}
+
+  /* ── SCROLL CONTENT ──────────────────────────*/
+  .scroll-content{flex:1;overflow-y:auto;padding-bottom:70px}
+  .scroll-content::-webkit-scrollbar{width:3px}
+  .scroll-content::-webkit-scrollbar-thumb{background:var(--border)}
+
+  /* ── TRANSITIONS PANEL ───────────────────────*/
+  .transitions-panel{
+    width:100%;max-width:1200px;
+    padding:0 24px 32px;
+  }
+  .tp-title{
+    font-size:.85rem;font-weight:600;color:var(--text2);
+    text-transform:uppercase;letter-spacing:.08em;margin-bottom:16px;
+  }
+  .flow-grid{
+    display:flex;flex-wrap:wrap;gap:12px;
+  }
+  .flow-card{
+    background:var(--surface);border:1px solid var(--border);
+    border-radius:var(--radius);padding:14px 18px;
+    display:flex;align-items:center;gap:12px;
+    cursor:pointer;transition:border-color .2s;
+  }
+  .flow-card:hover{border-color:var(--purple)}
+  .fc-from,.fc-to{font-size:.78rem;font-weight:600}
+  .fc-from{color:var(--teal)}
+  .fc-to{color:var(--purple)}
+  .fc-arrow{color:var(--text2);font-size:.9rem}
+  .fc-anim{font-size:.68rem;color:var(--text2)}
+
+  /* REUSABLE UI ATOMS */
+  .chip{
+    display:inline-flex;align-items:center;gap:4px;
+    padding:2px 8px;border-radius:20px;font-size:.62rem;
+    background:var(--surface2);color:var(--text2);border:1px solid var(--border);
+  }
+  .chip.green{background:#1a3a1a;color:var(--green);border-color:#2d5a2d}
+  .chip.red{background:#3a1a1a;color:var(--accent);border-color:#5a2a2a}
+  .timer-badge{
+    background:#0d2a0d;border:1px solid #1a4a1a;
+    color:var(--green);font-size:.65rem;border-radius:20px;padding:3px 10px;
+    display:inline-flex;align-items:center;gap:4px;
+  }
+  .separator{height:1px;background:var(--border);margin:0 16px}
+  .btn{
+    display:inline-flex;align-items:center;justify-content:center;gap:6px;
+    padding:10px 20px;border-radius:25px;font-size:.78rem;font-weight:600;
+    cursor:pointer;border:none;transition:opacity .2s;
+  }
+  .btn:hover{opacity:.85}
+  .btn-primary{background:var(--accent);color:#fff}
+  .btn-outline{background:transparent;color:var(--text);border:1px solid var(--border)}
+  .btn-green{background:var(--green);color:#fff}
+  .avatar{
+    width:32px;height:32px;border-radius:50%;
+    display:flex;align-items:center;justify-content:center;
+    font-size:.75rem;font-weight:700;flex-shrink:0;
+  }
+  .section-label{
+    font-size:.62rem;text-transform:uppercase;letter-spacing:.1em;
+    color:var(--text2);padding:8px 16px 4px;
+  }
+  .list-item{
+    display:flex;align-items:center;gap:12px;
+    padding:12px 16px;border-bottom:1px solid var(--border);
+    cursor:pointer;
+  }
+  .list-item:hover{background:var(--surface2)}
+
+  /* ── LEGEND ─────────────────────────────────*/
+  .legend{
+    width:100%;max-width:1200px;
+    padding:0 24px 40px;
+    display:flex;flex-wrap:wrap;gap:16px;
+  }
+  .legend-item{display:flex;align-items:center;gap:8px;font-size:.75rem;color:var(--text2)}
+  .legend-dot{width:10px;height:10px;border-radius:50%}
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header>
+  <div class="logo">
+    <div class="logo-badge">LST</div>
+    Let's Talk — Wireframes
+  </div>
+  <div class="flow-nav" id="flowNav"></div>
+</header>
+
+<!-- STAGE: phones side by side -->
+<div class="stage" id="stage">
+  <div class="phone-wrap">
+    <div class="phone-label">Mobile View</div>
+    <div class="phone" id="phone">
+      <!-- screens injected here -->
+    </div>
+  </div>
+</div>
+
+<!-- FLOW TRANSITIONS PANEL -->
+<div class="transitions-panel">
+  <div class="tp-title">Screen Transitions</div>
+  <div class="flow-grid" id="flowGrid"></div>
+</div>
+
+<!-- LEGEND -->
+<div class="legend">
+  <div class="legend-item"><div class="legend-dot" style="background:var(--purple)"></div>Active Tab</div>
+  <div class="legend-item"><div class="legend-dot" style="background:var(--accent)"></div>Primary Action</div>
+  <div class="legend-item"><div class="legend-dot" style="background:var(--teal)"></div>Live / Timer</div>
+  <div class="legend-item"><div class="legend-dot" style="background:var(--green)"></div>Online Indicator</div>
+</div>
+
+<script>
+// ── SCREEN DEFINITIONS ─────────────────────────────────────────────────────
+const SCREENS = [
+  { id:'splash',    label:'Splash'       },
+  { id:'main',      label:'Live Room'    },
+  { id:'global',    label:'Global Chat'  },
+  { id:'explore',   label:'Explore'      },
+  { id:'threads',   label:'Your Threads' },
+  { id:'minithread',label:'Mini Thread'  },
+  { id:'notification',label:'Notifications'},
+  { id:'profile',   label:'Profile'      },
+  { id:'share',     label:'Share Topic'  },
+];
+
+// ── TRANSITIONS MAP ────────────────────────────────────────────────────────
+const FLOWS = [
+  {from:'Splash',      to:'Live Room',     anim:'Fade + Scale Up'},
+  {from:'Live Room',   to:'Explore',       anim:'Slide Left (tab)'},
+  {from:'Live Room',   to:'Global Chat',   anim:'Slide Up (sheet)'},
+  {from:'Live Room',   to:'Share Topic',   anim:'Slide Up (modal)'},
+  {from:'Explore',     to:'Global Chat',   anim:'Slide Left → Room'},
+  {from:'Global Chat', to:'Mini Thread',   anim:'Slide Left (detail)'},
+  {from:'Global Chat', to:'Your Threads',  anim:'Slide Left (tab)'},
+  {from:'Your Threads',to:'Mini Thread',   anim:'Slide Left (detail)'},
+  {from:'Any Tab',     to:'Notifications', anim:'Slide Left (tab)'},
+  {from:'Any Tab',     to:'Profile',       anim:'Slide Left (tab)'},
+  {from:'Profile',     to:'Live Room',     anim:'Slide Right (back)'},
+];
+
+// ── BOTTOM NAV TEMPLATE ────────────────────────────────────────────────────
+const NAV_ICONS = {
+  liveroom:`<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9l2.1 2.1M17 17l2.1 2.1M4.9 19.1l2.1-2.1M17 7l2.1-2.1"/></svg>`,
+  explore:`<svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>`,
+  threads:`<svg viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h10"/></svg>`,
+  notif:`<svg viewBox="0 0 24 24"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>`,
+  profile:`<svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>`,
+};
+
+function buildNav(activeId){
+  const items = [
+    {id:'main',icon:'liveroom',label:'Live Room'},
+    {id:'explore',icon:'explore',label:'Explore'},
+    {id:'threads',icon:'threads',label:'Your Threads'},
+    {id:'notification',icon:'notif',label:'Notification'},
+    {id:'profile',icon:'profile',label:'Profile'},
+  ];
+  return `<div class="bnav">${items.map(i=>`
+    <button class="bnav-item${i.id===activeId?' active':''}" onclick="goScreen('${i.id}')">
+      ${NAV_ICONS[i.icon]}
+      <span>${i.label}</span>
+    </button>`).join('')}</div>`;
+}
+
+// ── SCREEN HTML BUILDERS ───────────────────────────────────────────────────
+function buildSplash(){return`
+<div class="screen" id="s-splash" style="background:var(--bg);justify-content:center;align-items:center">
+  <div style="text-align:center">
+    <div style="width:72px;height:72px;background:var(--accent);border-radius:20px;display:flex;align-items:center;justify-content:center;margin:0 auto 16px;font-weight:900;font-size:1rem;color:#fff;letter-spacing:-.02em;box-shadow:0 0 40px #e6394666">
+      LET'S<br>TALK!
+    </div>
+    <div style="font-weight:700;font-size:1.2rem;margin-bottom:6px">Let's Talk</div>
+    <div style="font-size:.72rem;color:var(--text2)">POWERED · Group 2</div>
+    <div style="margin-top:48px">
+      <div style="width:40px;height:4px;background:var(--accent);border-radius:2px;margin:0 auto"></div>
+    </div>
+  </div>
+</div>`;}
+
+function buildMain(){return`
+<div class="screen" id="s-main">
+  <div class="topbar">
+    <div class="topbar-logo"><div class="t-badge">LST</div><span style="font-weight:600">Let's Talk</span></div>
+  </div>
+  <div class="scroll-content" style="padding:0 12px">
+    <div style="display:flex;justify-content:flex-end;margin:8px 0">
+      <div class="timer-badge">● 26:57:23 left</div>
+    </div>
+    <!-- Topic Card -->
+    <div style="background:var(--surface2);border-radius:var(--radius);padding:14px;margin-bottom:12px">
+      <div style="display:flex;gap:6px;margin-bottom:8px">
+        <span class="chip">Admin</span><span class="chip">Global</span>
+      </div>
+      <div style="font-weight:700;font-size:.95rem;margin-bottom:8px">Is social media making conversations shallow in our society?</div>
+      <div style="font-size:.72rem;color:var(--text2);margin-bottom:12px">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</div>
+      <!-- Topic image placeholder -->
+      <div style="background:var(--surface);border-radius:10px;height:130px;display:flex;align-items:center;justify-content:center;margin-bottom:10px;border:1px dashed var(--border)">
+        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="var(--border)" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+      </div>
+      <div style="font-size:.68rem;color:var(--text2);margin-bottom:8px">1.2K participating opinions · live thread</div>
+      <div style="display:flex;gap:8px">
+        <button class="btn btn-outline" style="font-size:.7rem;padding:6px 14px" onclick="goScreen('main')">👁 View info</button>
+        <button class="btn btn-outline" style="font-size:.7rem;padding:6px 14px" onclick="goScreen('share')">↑ Share</button>
+      </div>
+    </div>
+    <!-- Join Global Room -->
+    <button class="btn btn-green" style="width:100%;margin-bottom:12px;font-size:.85rem" onclick="goScreen('global')">
+      ● Join Global Room &nbsp;<span class="chip green" style="font-size:.6rem">Live</span>
+    </button>
+  </div>
+  ${buildNav('main')}
+</div>`;}
+
+function buildGlobal(){return`
+<div class="screen" id="s-global">
+  <div class="topbar">
+    <div><!-- back arrow -->
+      <button class="btn-outline" style="background:none;border:none;color:var(--text2);cursor:pointer;font-size:1rem" onclick="goScreen('main')">← </button>
+    </div>
+    <div class="topbar-title">Global Chat</div>
+    <button class="more-btn">⋯</button>
+  </div>
+  <!-- Filter bar -->
+  <div style="display:flex;gap:8px;padding:6px 12px;flex-shrink:0;overflow-x:auto">
+    <span style="font-size:.62rem;color:var(--text2);align-self:center">FILTER</span>
+    <span class="chip" style="cursor:pointer">ALL</span>
+    <span class="chip" style="cursor:pointer">Host only</span>
+    <span class="chip" style="cursor:pointer">You</span>
+    <span style="margin-left:auto;font-size:.7rem;color:var(--text2)">✕</span>
+  </div>
+  <!-- Search -->
+  <div style="padding:6px 12px;flex-shrink:0">
+    <div style="background:var(--surface2);border-radius:20px;padding:7px 14px;display:flex;gap:8px;align-items:center;font-size:.72rem;color:var(--text2)">
+      🔍 Search in this topic
+    </div>
+  </div>
+  <!-- Rules banner -->
+  <div style="margin:0 12px 8px;background:var(--surface2);border-radius:10px;padding:10px 12px;font-size:.65rem;color:var(--text2);flex-shrink:0">
+    Welcome. Every topic runs for 27 hours. Replies are public, thread and reportable. Be kind; disagree with ideas and not people.
+  </div>
+  <!-- Messages -->
+  <div class="scroll-content">
+    ${buildMsg('AD','Admin','Host','4:12 PM',true)}
+    ${buildMsg('CH','Christ','Following','4:14 PM',false)}
+    ${buildMsg('FF','Fifi','Follow','4:19 PM',false)}
+  </div>
+  <!-- Input -->
+  <div style="padding:8px 12px;border-top:1px solid var(--border);flex-shrink:0">
+    <div style="font-size:.6rem;color:var(--purple);margin-bottom:4px">Replying into #global-room</div>
+    <div style="display:flex;gap:8px;align-items:center">
+      <input style="flex:1;background:var(--surface2);border:none;border-radius:20px;padding:9px 14px;font-size:.75rem;color:var(--text)" placeholder="Share your take…"/>
+      <button class="btn btn-primary" style="width:34px;height:34px;border-radius:50%;padding:0">▶</button>
+    </div>
+    <div style="font-size:.58rem;color:var(--text2);margin-top:3px">27th topic window · editing allowed</div>
+  </div>
+</div>`;}
+
+function buildMsg(initials, name, tag, time, isHost){
+  const colors=['#7c4dff','#e63946','#4ecdc4','#ff9800'];
+  const c=colors[Math.floor(Math.random()*colors.length)];
+  return`<div style="padding:10px 12px 6px;border-bottom:1px solid var(--border)">
+    <div style="display:flex;align-items:center;gap:6px;margin-bottom:6px">
+      <div class="avatar" style="background:${c}">${initials}</div>
+      <div>
+        <span style="font-size:.75rem;font-weight:600">${name}</span>
+        <span class="chip" style="margin-left:4px;font-size:.58rem">${tag}</span>
+      </div>
+      <div style="margin-left:auto;font-size:.6rem;color:var(--text2)">${time}</div>
+    </div>
+    <div style="font-size:.75rem;line-height:1.5;color:var(--text)">Welcome. Every topic runs for 27 hours. Replies are public, thread and reportable. Be kind; disagree with ideas and not people.</div>
+    <div style="font-size:.58rem;color:var(--text2);margin:4px 0">Editable for 27h window</div>
+    <div style="display:flex;gap:6px;margin-top:6px;flex-wrap:wrap">
+      <button class="btn btn-outline" style="font-size:.6rem;padding:3px 8px" onclick="goScreen('minithread')">Open threads</button>
+      ${isHost?`<button class="btn btn-outline" style="font-size:.6rem;padding:3px 8px">✎ Edit</button><button class="btn btn-outline" style="font-size:.6rem;padding:3px 8px">🗑 Delete</button>`:''}
+      <button class="btn btn-outline" style="font-size:.6rem;padding:3px 8px">⚑ Report</button>
+    </div>
+  </div>`;}
+
+function buildExplore(){return`
+<div class="screen" id="s-explore">
+  <div class="topbar">
+    <div class="topbar-title" style="display:flex;align-items:center;gap:6px"><span style="color:var(--purple)">🔍</span> Explore Topics</div>
+    <button class="btn btn-primary" style="font-size:.65rem;padding:5px 10px" onclick="goScreen('global')">+ New Topic</button>
+  </div>
+  <div class="scroll-content" style="padding:0 12px">
+    <!-- Search -->
+    <div style="background:var(--surface2);border-radius:20px;padding:8px 14px;display:flex;gap:8px;align-items:center;font-size:.72rem;color:var(--text2);margin-bottom:12px">
+      🔍 Search topics, categories
+    </div>
+    <!-- Category filter -->
+    <div style="display:flex;gap:8px;overflow-x:auto;margin-bottom:16px;padding-bottom:4px">
+      ${['All topics','Society','Tech','Culture','Money','Random'].map((c,i)=>`<span class="chip" style="cursor:pointer;${i===0?'background:var(--purple);color:#fff;border-color:var(--purple)':''};white-space:nowrap">${c}</span>`).join('')}
+    </div>
+    <div style="font-size:.72rem;font-weight:600;margin-bottom:10px">🔥 TRENDING NOW</div>
+    ${buildTopicCard('Is social media making conversations shallow...','Society','26hr','1.2K')}
+    ${buildTopicCard('With rapid advancements in AI, what jobs...','Society','21hr','1.2K')}
+    ${buildTopicCard('Is entertainment getting better or worse?','Culture','16hr','1.2K')}
+    ${buildTopicCard('Are central banks doing enough?','Money','8hr','980')}
+  </div>
+  ${buildNav('explore')}
+</div>`;}
+
+function buildTopicCard(title,cat,left,count){
+  return`<div style="background:var(--surface2);border-radius:var(--radius);padding:12px;margin-bottom:10px;display:flex;gap:12px;cursor:pointer" onclick="goScreen('global')">
+    <div style="width:48px;height:48px;border-radius:12px;background:linear-gradient(135deg,var(--purple),var(--accent));flex-shrink:0"></div>
+    <div>
+      <div style="font-size:.78rem;font-weight:600;margin-bottom:4px">${title}</div>
+      <div style="font-size:.65rem;color:var(--text2)">${cat} · ${left} left</div>
+      <div style="font-size:.65rem;color:var(--text2)">${count} participating</div>
+    </div>
+  </div>`;}
+
+function buildThreads(){return`
+<div class="screen" id="s-threads">
+  <div class="topbar">
+    <div class="topbar-title" style="display:flex;align-items:center;gap:6px"><span style="color:var(--purple)">≡</span> Your Threads</div>
+    <button class="more-btn">⋯</button>
+  </div>
+  <div class="scroll-content" style="display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:300px">
+    <div style="text-align:center;padding:40px 24px">
+      <div style="width:48px;height:48px;background:var(--surface2);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 14px;color:var(--text2)">💬</div>
+      <div style="font-weight:600;margin-bottom:8px">You haven't joined any threads yet</div>
+      <div style="font-size:.72rem;color:var(--text2)">Reply to a message to start a thread</div>
+      <button class="btn btn-primary" style="margin-top:20px;font-size:.78rem" onclick="goScreen('explore')">Explore Topics</button>
+    </div>
+  </div>
+  ${buildNav('threads')}
+</div>`;}
+
+function buildMiniThread(){return`
+<div class="screen" id="s-minithread">
+  <div class="topbar">
+    <button style="background:none;border:none;color:var(--text2);cursor:pointer;font-size:1rem" onclick="goScreen('global')">← </button>
+    <div class="topbar-title">Threads with Admin</div>
+    <button class="more-btn">⋯</button>
+  </div>
+  <!-- Parent message context -->
+  <div style="padding:10px 12px;background:var(--surface2);border-bottom:1px solid var(--border);flex-shrink:0;font-size:.7rem;color:var(--text2);font-style:italic">
+    Welcome. Every topic runs for 27 hours. Replies are public, thread and reportable…
+  </div>
+  <div class="scroll-content">
+    ${buildMsg('AD','Admin','Host','4:12 PM',true)}
+    ${buildMsg('CH','Christ','Following','4:14 PM',false)}
+    ${buildMsg('FF','Fifi','Follow','4:19 PM',false)}
+  </div>
+  <div style="padding:8px 12px;border-top:1px solid var(--border);flex-shrink:0">
+    <div style="font-size:.6rem;color:var(--purple);margin-bottom:4px">Replying into #global-room</div>
+    <div style="display:flex;gap:8px;align-items:center">
+      <input style="flex:1;background:var(--surface2);border:none;border-radius:20px;padding:9px 14px;font-size:.75rem;color:var(--text)" placeholder="Share your take…"/>
+      <button class="btn btn-primary" style="width:34px;height:34px;border-radius:50%;padding:0">▶</button>
+    </div>
+    <div style="font-size:.58rem;color:var(--text2);margin-top:3px">27th topic window · editing allowed</div>
+  </div>
+</div>`;}
+
+function buildNotification(){return`
+<div class="screen" id="s-notification">
+  <div class="topbar">
+    <div class="topbar-title" style="display:flex;align-items:center;gap:6px"><span style="color:var(--purple)">🔍</span> Notification</div>
+    <button class="more-btn">⋯</button>
+  </div>
+  <div class="scroll-content">
+    <div class="section-label">TODAY</div>
+    ${buildNotifItem('shield','System alert',  '5m ago', '#4ecdc4')}
+    ${buildNotifItem('chat',  'New reply in thread','18m ago','#7c4dff')}
+    ${buildNotifItem('heart', 'Someone liked your comment','33m ago','#e63946')}
+    ${buildNotifItem('star',  'New topic started','1h ago', '#ff9800')}
+    ${buildNotifItem('chat',  'Mention in Global Chat','2h ago', '#7c4dff')}
+    ${buildNotifItem('star',  'Topic ending soon','3h ago', '#ff9800')}
+    ${buildNotifItem('heart', 'New reaction','4h ago', '#e63946')}
+    <div class="section-label">YESTERDAY</div>
+    ${buildNotifItem('shield','System update','20h ago','#4ecdc4')}
+    ${buildNotifItem('chat',  'Replied to your thread','22h ago','#7c4dff')}
+  </div>
+  ${buildNav('notification')}
+</div>`;}
+
+function buildNotifItem(icon,text,time,color){
+  const icons={shield:'🛡',chat:'💬',heart:'♥',star:'☆'};
+  return`<div class="list-item">
+    <div class="avatar" style="background:${color}22;color:${color};font-size:.85rem">${icons[icon]||'●'}</div>
+    <div style="flex:1">
+      <div style="font-size:.78rem;font-weight:500">${text}</div>
+      <div style="font-size:.65rem;color:var(--text2)">${time}</div>
+    </div>
+  </div>`;}
+
+function buildProfile(){return`
+<div class="screen" id="s-profile">
+  <div class="topbar">
+    <div></div>
+    <button class="more-btn">⋯</button>
+  </div>
+  <div class="scroll-content" style="padding:0 12px">
+    <!-- Avatar -->
+    <div style="text-align:center;padding:16px 0">
+      <div class="avatar" style="width:64px;height:64px;font-size:1.4rem;background:linear-gradient(135deg,var(--purple),var(--teal));margin:0 auto 10px">Y</div>
+      <div style="font-weight:700">YOU</div>
+      <div style="font-size:.72rem;color:var(--text2)">@let'stalk_user</div>
+      <div style="font-size:.65rem;color:var(--text2)">Digital citizen · undefined</div>
+    </div>
+    <!-- Stats -->
+    <div style="display:flex;justify-content:space-around;background:var(--surface2);border-radius:var(--radius);padding:14px;margin-bottom:14px">
+      ${buildStat('3,200','comments')}${buildStat('1,200','followers')}${buildStat('200','following')}
+    </div>
+    <!-- Sections -->
+    <div class="section-label">ADMIN PANEL</div>
+    <div class="list-item" style="border-radius:var(--radius);background:var(--surface2);margin-bottom:4px">
+      💬 <span style="font-size:.8rem">Post New Global Topic</span>
+    </div>
+    <div class="section-label">PREFERENCES</div>
+    <div class="list-item" style="background:var(--surface2);border-radius:var(--radius);margin-bottom:4px;justify-content:space-between">
+      <div style="display:flex;align-items:center;gap:8px">🔔 <span style="font-size:.8rem">Push Notification</span></div>
+      <div style="width:36px;height:20px;background:var(--green);border-radius:10px;position:relative"><div style="width:16px;height:16px;background:#fff;border-radius:50%;position:absolute;right:2px;top:2px"></div></div>
+    </div>
+    <div class="section-label">ACCOUNT</div>
+    ${buildMenuItem('👤','Edit Profile')}
+    ${buildMenuItem('🛡','Privacy & Security')}
+    ${buildMenuItem('☆','Help & Support')}
+    <button class="btn" style="width:100%;margin:12px 0;background:#3a1a1a;color:var(--accent)">Sign Out</button>
+  </div>
+  ${buildNav('profile')}
+</div>`;}
+
+function buildStat(num,label){
+  return`<div style="text-align:center"><div style="font-weight:700">${num}</div><div style="font-size:.65rem;color:var(--text2)">${label}</div></div>`;}
+function buildMenuItem(icon,label){
+  return`<div class="list-item" style="background:var(--surface2);margin-bottom:2px">
+    ${icon} <span style="font-size:.8rem;flex:1">${label}</span> <span style="color:var(--text2)">›</span>
+  </div>`;}
+
+function buildShare(){return`
+<div class="screen" id="s-share">
+  <div class="topbar">
+    <button style="background:none;border:none;color:var(--text2);cursor:pointer;font-size:1rem" onclick="goScreen('main')">← </button>
+    <div class="topbar-title">Share this topic</div>
+    <div></div>
+  </div>
+  <div class="scroll-content" style="padding:16px">
+    <!-- Topic summary -->
+    <div style="background:var(--surface2);border-radius:var(--radius);padding:14px;margin-bottom:14px;font-size:.75rem;color:var(--text2);line-height:1.6">
+      Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Quis ipsum suspendisse ultrices gravida…
+    </div>
+    <!-- Link copy -->
+    <div style="font-size:.72rem;font-weight:600;margin-bottom:8px">Topic Link</div>
+    <div style="display:flex;gap:8px;align-items:center;margin-bottom:10px">
+      <div style="flex:1;background:var(--surface2);border-radius:8px;padding:9px 12px;font-size:.65rem;color:var(--text2);overflow:hidden;text-overflow:ellipsis;white-space:nowrap">https://lst.app/topic/is-social-media-shallow</div>
+      <button class="btn btn-outline" style="font-size:.7rem;padding:6px 12px">Copy</button>
+    </div>
+    <!-- Share QR placeholder -->
+    <div style="background:var(--surface2);border-radius:var(--radius);height:120px;display:flex;align-items:center;justify-content:center;margin-bottom:14px;border:1px dashed var(--border);font-size:.72rem;color:var(--text2)">
+      [ QR Code ]
+    </div>
+    <button class="btn btn-green" style="width:100%">Open native share</button>
+  </div>
+</div>`;}
+
+// ── INJECT SCREENS ─────────────────────────────────────────────────────────
+const phone = document.getElementById('phone');
+const builders = {
+  splash:buildSplash, main:buildMain, global:buildGlobal,
+  explore:buildExplore, threads:buildThreads, minithread:buildMiniThread,
+  notification:buildNotification, profile:buildProfile, share:buildShare
+};
+SCREENS.forEach(s=>{
+  const tmp = document.createElement('div');
+  tmp.innerHTML = builders[s.id]();
+  phone.appendChild(tmp.firstElementChild);
+});
+
+// ── NAV BUTTONS ────────────────────────────────────────────────────────────
+const navEl = document.getElementById('flowNav');
+SCREENS.forEach(s=>{
+  const btn=document.createElement('button');
+  btn.className='flow-btn';btn.textContent=s.label;
+  btn.onclick=()=>goScreen(s.id);
+  navEl.appendChild(btn);
+});
+
+// ── TRANSITION CARDS ───────────────────────────────────────────────────────
+const flowGrid=document.getElementById('flowGrid');
+FLOWS.forEach(f=>{
+  const card=document.createElement('div');
+  card.className='flow-card';
+  card.innerHTML=`<span class="fc-from">${f.from}</span><span class="fc-arrow">→</span><span class="fc-to">${f.to}</span><br><span class="fc-anim">${f.anim}</span>`;
+  // click to run transition
+  const toId=SCREENS.find(s=>s.label===f.to)?.id;
+  if(toId) card.onclick=()=>goScreen(toId);
+  flowGrid.appendChild(card);
+});
+
+// ── SCREEN SWITCHER ─────────────────────────────────────────────────────────
+let current='splash';
+// activate splash on load
+document.getElementById('s-splash').classList.add('active');
+document.querySelectorAll('.flow-btn')[0].classList.add('active');
+
+// Auto-advance splash after 2s
+setTimeout(()=>goScreen('main'),2000);
+
+function goScreen(id){
+  if(id===current)return;
+  const prev=document.getElementById('s-'+current);
+  const next=document.getElementById('s-'+id);
+  if(!next)return;
+  prev.classList.add('exit-left');
+  prev.classList.remove('active');
+  setTimeout(()=>prev.classList.remove('exit-left'),420);
+  next.style.transform='translateX(40px)';
+  next.style.opacity='0';
+  next.classList.add('active');
+  requestAnimationFrame(()=>{
+    requestAnimationFrame(()=>{
+      next.style.transform='';
+      next.style.opacity='';
+    });
+  });
+  current=id;
+  // update nav buttons
+  document.querySelectorAll('.flow-btn').forEach((b,i)=>{
+    b.classList.toggle('active',SCREENS[i].id===id);
+  });
+}
+</script>
+</body>
+</html>

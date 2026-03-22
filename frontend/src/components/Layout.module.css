@@ -1,0 +1,577 @@
+.appContainer {
+  min-height: 100vh;
+  height: 100vh;
+  position: relative;
+  background-color: hsl(var(--general-bg));
+  background-image: url('../asssets/desktop_background.jpg');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+/*
+.backgroundOverlay {
+   position: fixed;
+  inset: 0;
+  background: linear-gradient(
+    to bottom,
+    rgba(255, 255, 255, 0.04) 0%,
+    rgba(255, 255, 255, 0.02) 50%,
+    rgba(255, 255, 255, 0.05) 100%
+  );
+  z-index: 0;
+  pointer-events: none;
+} */
+
+
+.backgroundOverlay {
+  position: fixed;
+  inset: 0;
+  background: linear-gradient(
+    to bottom,
+    rgba(0, 0, 0, 0.75) 0%,
+    rgba(0, 0, 0, 0.65) 50%,
+    rgba(0, 0, 0, 0.8) 100%
+  );
+  z-index: 0;
+  pointer-events: none;
+}
+
+.backgroundOverlayHidden {
+  display: none;
+}
+
+.mainContent {
+  position: relative;
+  /* z-index: 1; - Removed to prevent creating a stacking context that traps fixed modals below the header */
+  margin-left: 64px;
+  min-height: 100dvh;
+  height: 100dvh;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.mainContentWithHeader {
+  padding-top: 56px;
+  height: 100dvh;
+  min-height: 100dvh;
+}
+
+/* ── Shared header tokens ── */
+.desktopHeader {
+  display: flex;
+  position: fixed;
+  top: 0;
+  left: 64px;
+  right: 0;
+  height: 56px;
+  z-index: 90;
+  background: hsl(var(--sidebar));
+  border-bottom: 1px solid hsla(0, 0%, 100%, 0.08);
+  backdrop-filter: blur(12px);
+}
+
+.mobileHeader {
+  display: none; /* shown via media query below */
+  position: static;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 56px;
+  z-index: 90;
+  background: hsl(var(--sidebar));
+  border-bottom: 1px solid hsla(0, 0%, 100%, 0.15);
+  flex-shrink: 0;
+}
+
+.headerContent {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 100%;
+  width: 100%;
+  padding: 0 20px;
+}
+
+.headerLeft {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+  flex: 1;
+}
+
+.backButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  border: none;
+  background: hsla(0, 0%, 100%, 0.08);
+  color: hsl(var(--muted-foreground));
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: background 150ms ease, color 150ms ease;
+}
+
+.backButton:hover {
+  background: hsla(0, 0%, 100%, 0.14);
+  color: white;
+}
+
+.headerIcon {
+  display: flex;
+  align-items: center;
+  color: hsl(var(--primary));
+  flex-shrink: 0;
+}
+
+.headerTitle {
+  font-size: 16px;
+  font-weight: 700;
+  color: white;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin: 0;
+}
+
+.headerSubtitle {
+  display: inline-flex;
+  align-items: center;
+  font-size: 13px;
+  color: hsl(var(--muted-foreground));
+  flex-shrink: 0;
+}
+
+.headerRight {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 12px;
+  flex-shrink: 0;
+}
+
+.sidebar {
+  display: flex;
+  flex-direction: column;
+  width: 64px;
+  background: hsl(var(--sidebar));
+  border-right: 1px solid hsla(0, 0%, 100%, 0.08);
+  position: fixed;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  z-index: 100;
+  transition: width 300ms ease-out;
+  overflow: hidden;
+}
+
+.sidebar:hover,
+.sidebar.expanded {
+  width: 240px;
+}
+
+.logoContainer {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  padding: 16px 8px;
+  gap: 12px;
+  height: 64px;
+  box-sizing: border-box;
+}
+
+.logoLink {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  overflow: hidden;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: #0f2d2d;
+  transition: all 200ms ease;
+  flex-shrink: 0;
+}
+
+.logoLink:hover {
+  transform: scale(1.05);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.4);
+}
+
+.logoLink:focus {
+  outline: 2px solid hsl(var(--primary));
+  outline-offset: 2px;
+}
+
+.logoImage {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.logoLabel {
+  font-size: 18px;
+  font-weight: 700;
+  color: white;
+  white-space: nowrap;
+  opacity: 0;
+  transition: opacity 200ms ease, transform 200ms ease;
+  transform: translateX(-10px);
+  pointer-events: none;
+}
+
+.sidebar:hover .logoLabel,
+.sidebar.expanded .logoLabel {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.navItems {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 0 6px;
+}
+
+.navItem {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 200ms ease;
+  position: relative;
+  color: hsl(var(--muted-foreground));
+  text-decoration: none;
+}
+
+.navItem:hover {
+  background: hsla(0, 0%, 100%, 0.08);
+  color: white;
+}
+
+.navItem:focus {
+  outline: 2px solid hsl(var(--primary));
+  outline-offset: 2px;
+}
+
+.navItem.active {
+  color: hsl(var(--primary));
+}
+
+.navItem.active::before {
+  content: '';
+  position: absolute;
+  left: -10px;
+  top: 4px;
+  bottom: 4px;
+  width: 3px;
+  background: hsl(var(--accent));
+  border-radius: 0 2px 2px 0;
+}
+
+.navIcon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.navLabel {
+  font-size: 14px;
+  font-weight: 500;
+  white-space: nowrap;
+  opacity: 0;
+  transition: opacity 200ms ease;
+}
+
+.sidebar:hover .navLabel,
+.sidebar.expanded .navLabel {
+  opacity: 1;
+}
+
+.categoriesSection {
+  padding: 8px;
+  margin-top: 8px;
+  border-top: 1px solid hsla(0, 0%, 100%, 0.08);
+}
+
+.categoriesList {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.categoryButton {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  padding: 8px 18px 8px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 200ms ease;
+  background: none;
+  border: none;
+  color: hsl(var(--muted-foreground));
+  text-align: left;
+}
+
+.categoryButton:hover {
+  background: hsla(0, 0%, 100%, 0.08);
+  color: white;
+}
+
+.categoryButton:focus {
+  outline: 2px solid hsl(var(--primary));
+  outline-offset: 2px;
+}
+
+.categoryButton.active {
+  background: hsla(0, 0%, 100%, 0.1);
+  color: white;
+}
+
+.categoryEmoji {
+  font-size: 16px;
+  flex-shrink: 0;
+  width: 24px;
+  text-align: center;
+}
+
+.categoryLabel {
+  font-size: 11px;
+  font-weight: 500;
+  white-space: nowrap;
+  opacity: 0;
+  transition: opacity 200ms ease;
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.sidebar:hover .categoryLabel,
+.sidebar.expanded .categoryLabel {
+  opacity: 1;
+}
+
+.userSection {
+  padding: 12px 8px;
+  border-top: 1px solid hsla(0, 0%, 100%, 0.08);
+  margin-top: auto;
+  position: relative;
+  flex-shrink: 0;
+}
+
+.userSection.active::before {
+  content: '';
+  position: absolute;
+  left: -8px;
+  top: 8px;
+  bottom: 8px;
+  width: 3px;
+  background: hsl(var(--accent));
+  border-radius: 0 2px 2px 0;
+}
+
+.userProfile {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: background 200ms ease;
+  text-decoration: none;
+  width: 100%;
+  color: inherit;
+}
+
+.userProfile:hover {
+  background: hsla(0, 0%, 100%, 0.08);
+}
+
+.userProfile:focus {
+  outline: 2px solid hsl(var(--primary));
+  outline-offset: 2px;
+}
+
+.userAvatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-weight: 700;
+  font-size: 14px;
+  flex-shrink: 0;
+}
+
+.userInfo {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  opacity: 0;
+  transition: opacity 200ms ease;
+}
+
+.sidebar:hover .userInfo,
+.sidebar.expanded .userInfo {
+  opacity: 1;
+}
+
+.userYou {
+  font-size: 10px;
+  font-weight: 600;
+  color: hsl(var(--muted-foreground));
+  text-transform: uppercase;
+}
+
+.userUsername {
+  font-size: 12px;
+  color: hsl(var(--muted-foreground));
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.mobileNav {
+  display: none;
+  background: hsl(var(--sidebar));
+  backdrop-filter: blur(12px);
+  border-top: 1px solid hsla(0, 0%, 100%, 0.1);
+  flex-shrink: 0;
+}
+
+.mobileNavItems {
+  display: flex;
+  flex: 1;
+}
+
+.mobileNavItem {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 12px 8px;
+  gap: 4px;
+  color: hsl(var(--muted-foreground));
+  text-decoration: none;
+  transition: color 200ms ease;
+}
+
+.mobileNavItem:hover,
+.mobileNavItem.active {
+  color: hsl(var(--primary));
+}
+
+.mobileNavItem:focus {
+  outline: 2px solid hsl(var(--primary));
+  outline-offset: -2px;
+}
+
+.mobileNavLabel {
+  font-size: 10px;
+  font-weight: 500;
+}
+
+.srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.focusVisible:focus:not(:focus-visible) {
+  outline: none;
+}
+
+.focusVisible:focus-visible {
+  outline: 2px solid hsl(var(--primary));
+  outline-offset: 2px;
+}
+
+
+
+@media (max-width: 768px) {
+  .appContainer {
+    display: flex;
+    flex-direction: column;
+    height: 100dvh;
+    min-height: 100dvh;
+    overflow: hidden;
+    background-image: url('../asssets/mobile_background.png');
+    background-attachment: scroll;
+  }
+
+  .desktopHeader {
+    display: none;
+  }
+
+  .mobileHeader {
+    display: flex;
+    position: static;
+    flex-shrink: 0;
+    width: 100%;
+    z-index: 90;
+    height: 56px;
+  }
+
+  .mobileNav {
+    display: flex;
+    position: static;
+    flex-shrink: 0;
+    width: 100%;
+  }
+
+  .sidebar {
+    display: none;
+  }
+
+  .mainContent {
+    margin-left: 0;
+    flex: 1;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    position: relative;
+  }
+
+  .mainContent.noMobileNav {
+    flex: 1;
+  }
+
+  .mainContentWithHeader {
+    padding-top: 0; /* No longer needed with sibling layout */
+    flex: 1;
+  }
+
+  .mainContentWithHeader.noMobileNav {
+    flex: 1;
+  }
+
+  .appContainer {
+    background-image: url('../asssets/mobile_background.png');
+  }
+}
