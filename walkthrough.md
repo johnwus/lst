@@ -1,33 +1,27 @@
-# Fly.io Backend Deployment Walkthrough
+# Full-Stack Deployment Walkthrough
 
-The LSTalk backend has been successfully deployed and is now live!
+The LSTalk application is now fully deployed and operational!
 
-## 🚀 Live URL
+## 🚀 Live Environment
 
-- **Backend Health Check**: [https://lstalk-api-morning-sky-4784.fly.dev/api/health](https://lstalk-api-morning-sky-4784.fly.dev/api/health)
-- **Hostname**: `lstalk-api-morning-sky-4784.fly.dev`
+- **Frontend (App)**: [https://lstalk-frontend-morning-sky-4784.fly.dev/](https://lstalk-frontend-morning-sky-4784.fly.dev/)
+- **Backend (API)**: [https://lstalk-api-morning-sky-4784.fly.dev/api/health](https://lstalk-api-morning-sky-4784.fly.dev/api/health)
 
 ## ✅ Accomplishments
 
-1.  **Fly.io App Created**: Initialized `lstalk-api-morning-sky-4784` in the `personal` organization.
-2.  **Configuration Generated**: Created [fly.toml](file:///c:/Users/Administrator/OneDrive/Desktop/lstalk/backend/fly.toml), [Dockerfile](file:///c:/Users/Administrator/OneDrive/Desktop/lstalk/backend/Dockerfile), and [.dockerignore](file:///c:/Users/Administrator/OneDrive/Desktop/lstalk/backend/.dockerignore) in the `backend/` directory.
-3.  **Secrets Configured**: Securely staged all environment variables (MongoDB, JWT, Cloudinary, VAPID).
-4.  **Deployment Successful**: Built and pushed the Docker image using `pnpm`.
-5.  **Git Synchronization**: Configured the project as a Git repository, synchronized with the remote `main` branch, and committed all local changes.
+1.  **Backend Deployment**: Deployed Node.js/Express backend with MongoDB, JWT, and Cloudinary integration.
+2.  **Frontend Deployment**: Deployed React/Vite/Tailwind frontend served via a high-performance Nginx container.
+3.  **SPA Routing**: Configured Nginx to handle Single Page Application routing correctly.
+4.  **Full-Stack Connectivity**: Baked the live backend URLs into the frontend build for seamless API and Socket.io communication.
+5.  **Git & GitHub Synchronized**: Project initialized and pushed to `main` at [https://github.com/johnwus/lst.git](https://github.com/johnwus/lst.git).
 
-## 🛠️ Next Steps
+## 🛠️ Maintenance & Next Steps
 
-### 1. Synchronize GitHub
-To complete the synchronization with the remote repository at `https://github.com/johnwus/lst.git`, please run the following command in your terminal (this may require you to enter your GitHub credentials or handle a GUI popup):
+### Deployment Updates
+To update the application in the future:
+- **Backend**: Run `fly deploy` from the `backend/` directory.
+- **Frontend**: Run `fly deploy -c fly.frontend.toml` from the project root.
 
-```powershell
-git push origin main
-```
-
-### 2. Update Frontend
-The frontend [.env](file:///c:/Users/Administrator/OneDrive/Desktop/lstalk/backend/.env) (or equivalent) should now be updated to point to the new live backend URL:
-
-```env
-VITE_API_URL=https://lstalk-api-morning-sky-4784.fly.dev/api
-VITE_SOCKET_URL=https://lstalk-api-morning-sky-4784.fly.dev
-```
+### Monitoring
+You can monitor your application health and logs at:
+- [Fly.io Dashboard](https://fly.io/dashboard)
